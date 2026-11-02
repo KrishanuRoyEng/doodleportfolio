@@ -3,15 +3,24 @@ import {
   Copy01Icon, 
   Tick01Icon,
   InstagramIcon,
-  ArrowRight01Icon
+  ArrowRight01Icon,
+  Sun01Icon,
+  Moon02Icon
 } from 'hugeicons-react';
 
 interface TopBarProps {
+  darkMode: boolean;
+  onToggleTheme: () => void;
   onNavigateTo: (sectionId: string) => void;
   onShowNotice: (msg: string) => void;
 }
 
-export const TopBar: React.FC<TopBarProps> = ({ onNavigateTo, onShowNotice }) => {
+export const TopBar: React.FC<TopBarProps> = ({ 
+  darkMode,
+  onToggleTheme,
+  onNavigateTo, 
+  onShowNotice 
+}) => {
   const [copied, setCopied] = useState(false);
   const artistEmail = 'akansha.doodles@gmail.com';
 
@@ -33,7 +42,7 @@ export const TopBar: React.FC<TopBarProps> = ({ onNavigateTo, onShowNotice }) =>
           <div className="brand-avatar-box">
             <img 
               src="/artworks/akansha_avatar.jpg" 
-              alt="Akansha and Doodles" 
+              alt="Akansha and Doodles — Physical Artist" 
               className="brand-avatar-img"
             />
           </div>
@@ -87,6 +96,17 @@ export const TopBar: React.FC<TopBarProps> = ({ onNavigateTo, onShowNotice }) =>
             onClick={() => onNavigateTo('request')}
           >
             Request
+          </button>
+
+          {/* Dark / Light Mode Toggle */}
+          <button
+            type="button"
+            className="btn-icon"
+            onClick={onToggleTheme}
+            aria-label={darkMode ? 'Switch to light mode' : 'Switch to dark mode'}
+            title={darkMode ? 'Switch to light mode' : 'Switch to dark mode'}
+          >
+            {darkMode ? <Sun01Icon size={16} /> : <Moon02Icon size={16} />}
           </button>
 
           <button 
@@ -187,7 +207,7 @@ export const TopBar: React.FC<TopBarProps> = ({ onNavigateTo, onShowNotice }) =>
             display: none;
           }
         }
-        @media (max-width: 680px) {
+        @media (max-width: 720px) {
           .topbar-nav .nav-link {
             display: none;
           }

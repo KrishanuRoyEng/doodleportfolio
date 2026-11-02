@@ -1,3 +1,4 @@
+import React from 'react';
 import { 
   ArrowRight01Icon, 
   GridTableIcon, 
@@ -19,11 +20,11 @@ export const HeroSummary: React.FC<HeroSummaryProps> = ({ onNavigateTo }) => {
             <div className="badge-row">
               <span className="badge">
                 <CheckmarkBadge01Icon size={14} />
-                <span>Verified Independent Illustrator</span>
+                <span>Traditional &amp; Physical Doodle Artist</span>
               </span>
               <span className="badge">
                 <Clock01Icon size={14} />
-                <span>3–5 business days turnaround</span>
+                <span>Hand-inked &amp; dispatched in 3–5 business days</span>
               </span>
             </div>
 
@@ -32,7 +33,7 @@ export const HeroSummary: React.FC<HeroSummaryProps> = ({ onNavigateTo }) => {
             </h1>
 
             <p className="hero-summary-text">
-              Custom doodle art, character portraits, couple keepsakes, pet memories, and sticker sheets crafted with clean flat line work and soft pastel palettes.
+              Handmade physical doodle art, character portraits, couple keepsakes, pet memories, and illustrated sticker sheets. Drawn with pigment fine-liners, artist gouache, and 300 GSM archival cotton paper.
             </p>
 
             <div className="hero-actions">
@@ -61,19 +62,19 @@ export const HeroSummary: React.FC<HeroSummaryProps> = ({ onNavigateTo }) => {
                 className="btn btn-white btn-lg"
               >
                 <InstagramIcon size={16} />
-                <span>Instagram archive</span>
+                <span>Instagram studio</span>
               </a>
             </div>
 
             <div className="hero-metrics-strip">
               <div className="metric-cell">
                 <div className="metric-val font-mono">140+</div>
-                <div className="metric-label">Delivered commissions</div>
+                <div className="metric-label">Delivered physical originals</div>
               </div>
               <div className="metric-divider"></div>
               <div className="metric-cell">
-                <div className="metric-val font-mono">300 DPI</div>
-                <div className="metric-label">Print-ready raster &amp; vector</div>
+                <div className="metric-val font-mono">300 GSM</div>
+                <div className="metric-label">100% cotton cold-pressed paper</div>
               </div>
               <div className="metric-divider"></div>
               <div className="metric-cell">
@@ -82,8 +83,8 @@ export const HeroSummary: React.FC<HeroSummaryProps> = ({ onNavigateTo }) => {
               </div>
               <div className="metric-divider"></div>
               <div className="metric-cell">
-                <div className="metric-val font-mono">4.9 / 5.0</div>
-                <div className="metric-label">Client satisfaction index</div>
+                <div className="metric-val font-mono">₹999</div>
+                <div className="metric-label">Starting postcard tier in INR</div>
               </div>
             </div>
           </div>
@@ -94,22 +95,22 @@ export const HeroSummary: React.FC<HeroSummaryProps> = ({ onNavigateTo }) => {
                 <div className="profile-image-frame">
                   <img 
                     src="/artworks/akansha_avatar.jpg" 
-                    alt="Akansha Illustrator Avatar" 
+                    alt="Akansha Traditional Illustrator" 
                     className="profile-image"
                   />
                 </div>
                 <div className="profile-info">
                   <div className="profile-name">Akansha</div>
-                  <div className="profile-role">Illustrator &amp; Visual Storyteller</div>
+                  <div className="profile-role">Physical Doodle Artist &amp; Painter</div>
                   <div className="profile-status-pill">
                     <span className="status-dot"></span>
-                    <span>Accepting new commissions</span>
+                    <span>Accepting physical commissions</span>
                   </div>
                 </div>
               </div>
 
               <div className="palette-strip">
-                <div className="palette-label">Palette Tokens</div>
+                <div className="palette-label">Curated Pigment Tokens</div>
                 <div className="palette-boxes">
                   <div className="palette-box" style={{ backgroundColor: '#FAF8FF' }} title="Soft purple canvas: #FAF8FF">
                     <span>#FAF8FF</span>
@@ -130,9 +131,9 @@ export const HeroSummary: React.FC<HeroSummaryProps> = ({ onNavigateTo }) => {
               </div>
 
               <div className="featured-spec-box">
-                <div className="spec-title font-mono">Direct Process Notice</div>
+                <div className="spec-title font-mono">Physical Medium Guarantee</div>
                 <div className="spec-text">
-                  Submit reference images. Receive fixed price invoice within 24 hours. Sketch review before final inks. 100% solid flat fills. Zero AI generation.
+                  Zero digital printing. 100% hand-painted physical originals using waterproof pigment fine-liners and artist gouache on archival cotton paper. Securely packed and shipped across India.
                 </div>
               </div>
             </div>
@@ -295,7 +296,7 @@ export const HeroSummary: React.FC<HeroSummaryProps> = ({ onNavigateTo }) => {
           font-family: var(--font-mono);
           font-size: 9px;
           font-weight: 600;
-          color: var(--color-primary-ink);
+          color: #181523;
         }
         .featured-spec-box {
           padding: 12px 14px;

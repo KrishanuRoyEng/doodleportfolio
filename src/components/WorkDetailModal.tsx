@@ -8,6 +8,7 @@ import {
   Tag01Icon 
 } from 'hugeicons-react';
 import type { WorkItem, CommissionFormat } from '../types';
+import { formatInr } from '../utils/pricing';
 
 interface WorkDetailModalProps {
   work: WorkItem | null;
@@ -40,7 +41,9 @@ export const WorkDetailModal: React.FC<WorkDetailModalProps> = ({
 
   const handleCommissionClick = () => {
     const formatToSelect: CommissionFormat = 
-      work.format === 'Sticker Sheet' ? 'Full Doodle' : work.format;
+      work.format === 'Handmade Sticker Sheet' 
+        ? 'Original Artwork (A5)' 
+        : work.format;
     onSelectFormat(formatToSelect);
     onClose();
   };
@@ -89,12 +92,12 @@ export const WorkDetailModal: React.FC<WorkDetailModalProps> = ({
             <p className="modal-work-desc">{work.description}</p>
 
             <div className="specs-card">
-              <div className="specs-card-title font-mono">Work Specifications</div>
+              <div className="specs-card-title font-mono">Original Work Specifications</div>
               
               <div className="spec-row">
                 <div className="spec-name">
                   <Layers01Icon size={14} />
-                  <span>Dimensions</span>
+                  <span>Physical Sheet Size</span>
                 </div>
                 <div className="spec-value font-mono">{work.dimensions}</div>
               </div>
@@ -109,8 +112,16 @@ export const WorkDetailModal: React.FC<WorkDetailModalProps> = ({
 
               <div className="spec-row">
                 <div className="spec-name">
+                  <Tag01Icon size={14} />
+                  <span>Archival Paper</span>
+                </div>
+                <div className="spec-value">{work.paperType}</div>
+              </div>
+
+              <div className="spec-row">
+                <div className="spec-name">
                   <Calendar01Icon size={14} />
-                  <span>Year</span>
+                  <span>Year Completed</span>
                 </div>
                 <div className="spec-value font-mono">{work.completionYear}</div>
               </div>
@@ -118,14 +129,14 @@ export const WorkDetailModal: React.FC<WorkDetailModalProps> = ({
               <div className="spec-row">
                 <div className="spec-name">
                   <Clock01Icon size={14} />
-                  <span>Turnaround</span>
+                  <span>Dispatch Schedule</span>
                 </div>
                 <div className="spec-value font-mono">{work.turnaroundDays} business days</div>
               </div>
             </div>
 
             <div className="swatch-section">
-              <div className="swatch-section-title font-mono">Palette Tokens Used</div>
+              <div className="swatch-section-title font-mono">Pigment Swatches Used</div>
               <div className="swatch-row">
                 {work.colorTokens.map((hex, idx) => (
                   <div key={idx} className="swatch-pill">
@@ -141,8 +152,8 @@ export const WorkDetailModal: React.FC<WorkDetailModalProps> = ({
 
             <div className="modal-cta-box">
               <div className="cta-price-group">
-                <div className="cta-label">Base format rate</div>
-                <div className="cta-price font-mono">${work.baseRateUsd} USD</div>
+                <div className="cta-label">Original physical artwork rate</div>
+                <div className="cta-price font-mono">{formatInr(work.baseRateInr)} INR</div>
               </div>
               <button 
                 type="button" 

@@ -13,12 +13,13 @@ import type {
 } from '../types';
 import { 
   FORMAT_DETAILS, 
-  SUBJECT_UNIT_PRICE, 
-  BACKGROUND_PRICES, 
-  COMMERCIAL_FEE, 
-  EXPRESS_FEE, 
-  SOURCE_FILES_FEE, 
-  PRINTABLE_SHEET_FEE 
+  SUBJECT_UNIT_PRICE_INR, 
+  BACKGROUND_PRICES_INR, 
+  COMMERCIAL_FEE_INR, 
+  TEAK_FRAME_FEE_INR, 
+  GIFT_NOTE_FEE_INR, 
+  EXPRESS_COURIER_FEE_INR,
+  formatInr 
 } from '../utils/pricing';
 
 interface CommissionConfiguratorProps {
@@ -50,19 +51,19 @@ export const CommissionConfigurator: React.FC<CommissionConfiguratorProps> = ({
     onChangeConfig((prev) => ({ ...prev, usageRights: usage }));
   };
 
-  const handleToggleAddon = (field: 'expressDelivery' | 'sourceFiles' | 'printableSheet') => {
+  const handleToggleAddon = (field: 'teakWoodFrame' | 'giftWrappingNote' | 'expressTrackedCourier') => {
     onChangeConfig((prev) => ({ ...prev, [field]: !prev[field] }));
   };
 
   const handleReset = () => {
     onChangeConfig(() => ({
-      format: 'Full Doodle',
+      format: 'Original Artwork (A5)',
       subjectCount: 1,
-      backgroundType: 'Flat Color',
-      usageRights: 'Personal',
-      expressDelivery: false,
-      sourceFiles: false,
-      printableSheet: false
+      backgroundType: 'Clean Paper Wash',
+      usageRights: 'Personal Keepsake',
+      teakWoodFrame: false,
+      giftWrappingNote: false,
+      expressTrackedCourier: false
     }));
   };
 
@@ -70,23 +71,23 @@ export const CommissionConfigurator: React.FC<CommissionConfiguratorProps> = ({
     <section id="commission" className="configurator-section">
       <div className="container">
         <div className="section-head">
-          <span className="section-label">Real-Time Pricing Calculator</span>
+          <span className="section-label">Real-Time Commission Calculator</span>
           <h2 className="section-title">Configure Commission</h2>
           <p className="section-desc">
-            Select format, subject count, background detail, and usage license to view an immediate itemized cost and delivery estimate.
+            Select physical paper size, subject count, background detail, and framing options to calculate an immediate itemized cost in INR.
           </p>
         </div>
 
         <div className="configurator-grid">
           {/* Controls Column */}
           <div className="configurator-controls">
-            {/* Step 1: Format */}
+            {/* Step 1: Format / Paper Size */}
             <div className="config-block">
               <div className="config-block-header">
                 <span className="block-step font-mono">01</span>
                 <div>
-                  <h3 className="block-title">Format</h3>
-                  <div className="block-subtitle">Choose illustration tier and canvas composition.</div>
+                  <h3 className="block-title">Format &amp; Paper Dimension</h3>
+                  <div className="block-subtitle">Choose physical original artwork size on 300 GSM cotton paper.</div>
                 </div>
               </div>
 
@@ -103,13 +104,14 @@ export const CommissionConfigurator: React.FC<CommissionConfiguratorProps> = ({
                     >
                       <div className="format-card-top">
                         <span className="format-name">{fmt}</span>
-                        <span className="format-price font-mono">${details.basePrice}</span>
+                        <span className="format-price font-mono">{formatInr(details.basePriceInr)}</span>
                       </div>
+                      <div className="format-spec font-mono">{details.size} · {details.paper}</div>
                       <p className="format-desc">{details.description}</p>
                       <div className="format-footer">
                         <span className="format-days font-mono">
                           <Clock01Icon size={12} />
-                          {details.baseDays} business days
+                          {details.baseDays} days dispatch
                         </span>
                         {isSelected && (
                           <span className="selected-indicator">
@@ -130,14 +132,14 @@ export const CommissionConfigurator: React.FC<CommissionConfiguratorProps> = ({
                 <span className="block-step font-mono">02</span>
                 <div>
                   <h3 className="block-title">Subject Count</h3>
-                  <div className="block-subtitle">1 subject included in base tier. Each additional character or pet is +${SUBJECT_UNIT_PRICE}.</div>
+                  <div className="block-subtitle">1 subject included in base tier. Each additional character or pet is +{formatInr(SUBJECT_UNIT_PRICE_INR)}.</div>
                 </div>
               </div>
 
               <div className="subject-stepper-row">
                 {[1, 2, 3, 4].map((count) => {
                   const isSelected = config.subjectCount === count;
-                  const addCost = (count - 1) * SUBJECT_UNIT_PRICE;
+                  const addCost = (count - 1) * SUBJECT_UNIT_PRICE_INR;
                   return (
                     <button
                       key={count}
@@ -148,7 +150,7 @@ export const CommissionConfigurator: React.FC<CommissionConfiguratorProps> = ({
                       <div className="stepper-count font-mono">{count}</div>
                       <div className="stepper-label">{count === 1 ? '1 Subject' : `${count} Subjects`}</div>
                       <div className="stepper-cost font-mono">
-                        {addCost === 0 ? 'Included' : `+$${addCost}`}
+                        {addCost === 0 ? 'Included' : `+${formatInr(addCost)}`}
                       </div>
                     </button>
                   );
@@ -161,15 +163,15 @@ export const CommissionConfigurator: React.FC<CommissionConfiguratorProps> = ({
               <div className="config-block-header">
                 <span className="block-step font-mono">03</span>
                 <div>
-                  <h3 className="block-title">Background Type</h3>
-                  <div className="block-subtitle">Select environment complexity.</div>
+                  <h3 className="block-title">Background Medium</h3>
+                  <div className="block-subtitle">Traditional watercolor or gouache background depth.</div>
                 </div>
               </div>
 
               <div className="segment-grid">
-                {(['Flat Color', 'Simple Props', 'Detailed Room'] as BackgroundType[]).map((bg) => {
+                {(['Clean Paper Wash', 'Floral & Hand Botanicals', 'Detailed Gouache Room'] as BackgroundType[]).map((bg) => {
                   const isSelected = config.backgroundType === bg;
-                  const cost = BACKGROUND_PRICES[bg];
+                  const cost = BACKGROUND_PRICES_INR[bg];
                   return (
                     <button
                       key={bg}
@@ -180,13 +182,13 @@ export const CommissionConfigurator: React.FC<CommissionConfiguratorProps> = ({
                       <div className="segment-card-top">
                         <span className="segment-title">{bg}</span>
                         <span className="segment-cost font-mono">
-                          {cost === 0 ? '+$0' : `+$${cost}`}
+                          {cost === 0 ? '+₹0' : `+${formatInr(cost)}`}
                         </span>
                       </div>
                       <div className="segment-detail">
-                        {bg === 'Flat Color' && 'Solid pastel canvas fill matching our signature color palette.'}
-                        {bg === 'Simple Props' && 'Floating items, coffee mugs, stars, plants, and minimal ground line.'}
-                        {bg === 'Detailed Room' && 'Full indoor room, desk, windows, books, and styled furniture.'}
+                        {bg === 'Clean Paper Wash' && 'Soft watercolor wash tinting the heavy archival cotton paper.'}
+                        {bg === 'Floral & Hand Botanicals' && 'Hand-drawn leafy vines, blossoms, stars, and ink accents.'}
+                        {bg === 'Detailed Gouache Room' && 'Opaque gouache indoor room, bookshelves, furniture, and window scene.'}
                       </div>
                     </button>
                   );
@@ -199,13 +201,13 @@ export const CommissionConfigurator: React.FC<CommissionConfiguratorProps> = ({
               <div className="config-block-header">
                 <span className="block-step font-mono">04</span>
                 <div>
-                  <h3 className="block-title">Usage Rights</h3>
-                  <div className="block-subtitle">Personal display or commercial monetization rights.</div>
+                  <h3 className="block-title">Usage &amp; Display License</h3>
+                  <div className="block-subtitle">Personal heirloom display or commercial reproduction rights.</div>
                 </div>
               </div>
 
               <div className="usage-row">
-                {(['Personal', 'Commercial'] as UsageType[]).map((usage) => {
+                {(['Personal Keepsake', 'Commercial & Publishing'] as UsageType[]).map((usage) => {
                   const isSelected = config.usageRights === usage;
                   return (
                     <button
@@ -215,15 +217,15 @@ export const CommissionConfigurator: React.FC<CommissionConfiguratorProps> = ({
                       onClick={() => handleUsageChange(usage)}
                     >
                       <div className="usage-card-top">
-                        <span className="usage-title">{usage} License</span>
+                        <span className="usage-title">{usage}</span>
                         <span className="usage-fee font-mono">
-                          {usage === 'Personal' ? 'Standard ($0)' : `+$${COMMERCIAL_FEE}`}
+                          {usage === 'Personal Keepsake' ? 'Standard (₹0)' : `+${formatInr(COMMERCIAL_FEE_INR)}`}
                         </span>
                       </div>
                       <p className="usage-desc">
-                        {usage === 'Personal' 
-                          ? 'Personal social media avatars, private prints, gifts, and non-commercial personal portfolios.' 
-                          : 'Full commercial release: merchandise sales, company logo, book covers, podcasts, or ads.'}
+                        {usage === 'Personal Keepsake' 
+                          ? 'Physical home display, personal wall framing, private gift, or social profile photograph.' 
+                          : 'Full reproduction rights: book illustrations, product packaging, cafe branding, or merchandise distribution.'}
                       </p>
                     </button>
                   );
@@ -231,13 +233,13 @@ export const CommissionConfigurator: React.FC<CommissionConfiguratorProps> = ({
               </div>
             </div>
 
-            {/* Step 5: Optional Deliverable Add-ons */}
+            {/* Step 5: Physical Deliverable Add-ons */}
             <div className="config-block">
               <div className="config-block-header">
                 <span className="block-step font-mono">05</span>
                 <div>
-                  <h3 className="block-title">Optional Add-ons</h3>
-                  <div className="block-subtitle">Additional delivery formats and expedited scheduling.</div>
+                  <h3 className="block-title">Physical Framing &amp; Delivery Add-ons</h3>
+                  <div className="block-subtitle">Handcrafted timber framing, wax seal gifting, and insured courier.</div>
                 </div>
               </div>
 
@@ -245,16 +247,16 @@ export const CommissionConfigurator: React.FC<CommissionConfiguratorProps> = ({
                 <label className="form-checkbox-row">
                   <input
                     type="checkbox"
-                    checked={config.expressDelivery}
-                    onChange={() => handleToggleAddon('expressDelivery')}
+                    checked={config.teakWoodFrame}
+                    onChange={() => handleToggleAddon('teakWoodFrame')}
                   />
                   <div className="checkbox-info">
                     <div className="checkbox-title-row">
-                      <span className="addon-name">Express Turnaround (3 Business Days)</span>
-                      <span className="addon-fee font-mono">+${EXPRESS_FEE}</span>
+                      <span className="addon-name">Solid Teak Wood Frame &amp; Glass Mounting</span>
+                      <span className="addon-fee font-mono">+{formatInr(TEAK_FRAME_FEE_INR)}</span>
                     </div>
                     <div className="checkbox-desc">
-                      Priority queue allocation. Sketch delivered in 24 hours, final inks within 72 hours.
+                      Custom handmade natural teak frame with acid-free mount board and protective glass, ready to hang.
                     </div>
                   </div>
                 </label>
@@ -262,16 +264,16 @@ export const CommissionConfigurator: React.FC<CommissionConfiguratorProps> = ({
                 <label className="form-checkbox-row">
                   <input
                     type="checkbox"
-                    checked={config.sourceFiles}
-                    onChange={() => handleToggleAddon('sourceFiles')}
+                    checked={config.giftWrappingNote}
+                    onChange={() => handleToggleAddon('giftWrappingNote')}
                   />
                   <div className="checkbox-info">
                     <div className="checkbox-title-row">
-                      <span className="addon-name">Layered Source Package (.PSD &amp; Vector SVG)</span>
-                      <span className="addon-fee font-mono">+${SOURCE_FILES_FEE}</span>
+                      <span className="addon-name">Handwritten Calligraphy Note &amp; Wax-Sealed Wrapping</span>
+                      <span className="addon-fee font-mono">+{formatInr(GIFT_NOTE_FEE_INR)}</span>
                     </div>
                     <div className="checkbox-desc">
-                      Includes organized layers, vector cut paths, and high-resolution raw master files.
+                      Packaged in kraft paper tied with jute twine, dried botanical flora, and an authentic wax seal stamp.
                     </div>
                   </div>
                 </label>
@@ -279,16 +281,16 @@ export const CommissionConfigurator: React.FC<CommissionConfiguratorProps> = ({
                 <label className="form-checkbox-row">
                   <input
                     type="checkbox"
-                    checked={config.printableSheet}
-                    onChange={() => handleToggleAddon('printableSheet')}
+                    checked={config.expressTrackedCourier}
+                    onChange={() => handleToggleAddon('expressTrackedCourier')}
                   />
                   <div className="checkbox-info">
                     <div className="checkbox-title-row">
-                      <span className="addon-name">Print-Ready 300 DPI CMYK PDF File</span>
-                      <span className="addon-fee font-mono">+${PRINTABLE_SHEET_FEE}</span>
+                      <span className="addon-name">Express Tracked Courier (BlueDart / DTDC Air)</span>
+                      <span className="addon-fee font-mono">+{formatInr(EXPRESS_COURIER_FEE_INR)}</span>
                     </div>
                     <div className="checkbox-desc">
-                      Calibrated CMYK color space with 3mm bleed margins for professional print shops.
+                      Priority dispatch with rigid corner-board protection, heavy bubble wrap, and insured tracking.
                     </div>
                   </div>
                 </label>
@@ -316,9 +318,9 @@ export const CommissionConfigurator: React.FC<CommissionConfiguratorProps> = ({
               <div className="breakdown-items-list">
                 <div className="breakdown-row">
                   <span className="breakdown-name">
-                    {config.format} (Base Tier)
+                    {config.format}
                   </span>
-                  <span className="breakdown-val font-mono">${priceBreakdown.basePrice}</span>
+                  <span className="breakdown-val font-mono">{formatInr(priceBreakdown.basePriceInr)}</span>
                 </div>
 
                 <div className="breakdown-row">
@@ -326,9 +328,9 @@ export const CommissionConfigurator: React.FC<CommissionConfiguratorProps> = ({
                     Subjects ({config.subjectCount} {config.subjectCount === 1 ? 'subject' : 'subjects'})
                   </span>
                   <span className="breakdown-val font-mono">
-                    {priceBreakdown.extraSubjectsPrice === 0 
+                    {priceBreakdown.extraSubjectsPriceInr === 0 
                       ? 'Included' 
-                      : `+$${priceBreakdown.extraSubjectsPrice}`}
+                      : `+${formatInr(priceBreakdown.extraSubjectsPriceInr)}`}
                   </span>
                 </div>
 
@@ -337,41 +339,41 @@ export const CommissionConfigurator: React.FC<CommissionConfiguratorProps> = ({
                     Background ({config.backgroundType})
                   </span>
                   <span className="breakdown-val font-mono">
-                    {priceBreakdown.backgroundPrice === 0 
-                      ? '+$0' 
-                      : `+$${priceBreakdown.backgroundPrice}`}
+                    {priceBreakdown.backgroundPriceInr === 0 
+                      ? '+₹0' 
+                      : `+${formatInr(priceBreakdown.backgroundPriceInr)}`}
                   </span>
                 </div>
 
                 <div className="breakdown-row">
                   <span className="breakdown-name">
-                    Rights ({config.usageRights})
+                    Usage License
                   </span>
                   <span className="breakdown-val font-mono">
-                    {priceBreakdown.commercialFee === 0 
-                      ? '+$0' 
-                      : `+$${priceBreakdown.commercialFee}`}
+                    {priceBreakdown.commercialFeeInr === 0 
+                      ? '+₹0' 
+                      : `+${formatInr(priceBreakdown.commercialFeeInr)}`}
                   </span>
                 </div>
 
-                {config.expressDelivery && (
+                {config.teakWoodFrame && (
                   <div className="breakdown-row breakdown-addon">
-                    <span className="breakdown-name">Express 3-Day Queue</span>
-                    <span className="breakdown-val font-mono">+${priceBreakdown.expressFee}</span>
+                    <span className="breakdown-name">Teak Wood Glass Frame</span>
+                    <span className="breakdown-val font-mono">+{formatInr(priceBreakdown.teakWoodFrameFeeInr)}</span>
                   </div>
                 )}
 
-                {config.sourceFiles && (
+                {config.giftWrappingNote && (
                   <div className="breakdown-row breakdown-addon">
-                    <span className="breakdown-name">Layered Source Package</span>
-                    <span className="breakdown-val font-mono">+${priceBreakdown.sourceFilesFee}</span>
+                    <span className="breakdown-name">Calligraphy &amp; Wax Seal</span>
+                    <span className="breakdown-val font-mono">+{formatInr(priceBreakdown.giftWrappingFeeInr)}</span>
                   </div>
                 )}
 
-                {config.printableSheet && (
+                {config.expressTrackedCourier && (
                   <div className="breakdown-row breakdown-addon">
-                    <span className="breakdown-name">300 DPI CMYK Print PDF</span>
-                    <span className="breakdown-val font-mono">+${priceBreakdown.printableSheetFee}</span>
+                    <span className="breakdown-name">Express Air Courier</span>
+                    <span className="breakdown-val font-mono">+{formatInr(priceBreakdown.expressCourierFeeInr)}</span>
                   </div>
                 )}
               </div>
@@ -381,9 +383,9 @@ export const CommissionConfigurator: React.FC<CommissionConfiguratorProps> = ({
                   <Clock01Icon size={16} />
                 </div>
                 <div>
-                  <div className="turnaround-label">Estimated Delivery Turnaround</div>
+                  <div className="turnaround-label">Estimated Dispatch Schedule</div>
                   <div className="turnaround-value font-mono">
-                    {priceBreakdown.estimatedTurnaroundDays} business days from deposit
+                    {priceBreakdown.estimatedTurnaroundDays} business days to courier dispatch
                   </div>
                 </div>
               </div>
@@ -391,10 +393,10 @@ export const CommissionConfigurator: React.FC<CommissionConfiguratorProps> = ({
               <div className="total-calculation-box">
                 <div className="total-meta">
                   <span className="total-label">Total Commission Cost</span>
-                  <span className="total-tax-note">Fixed price in USD</span>
+                  <span className="total-tax-note">Fixed price in INR (₹)</span>
                 </div>
                 <div className="total-number font-mono">
-                  ${priceBreakdown.totalCost}
+                  {formatInr(priceBreakdown.totalCostInr)}
                 </div>
               </div>
 
@@ -411,7 +413,7 @@ export const CommissionConfigurator: React.FC<CommissionConfiguratorProps> = ({
 
               <div className="summary-guarantee-note">
                 <p>
-                  Includes 2 sketch revision rounds. 50% deposit required upon invoice approval before drawing commences.
+                  Includes 2 pencil sketch review rounds prior to inking. 50% deposit required upon sketch approval. Shipped with protective wooden backing across India.
                 </p>
               </div>
             </div>
@@ -491,14 +493,14 @@ export const CommissionConfigurator: React.FC<CommissionConfiguratorProps> = ({
           padding: 14px;
           display: flex;
           flex-direction: column;
-          gap: 8px;
+          gap: 6px;
           transition: background-color 0.12s ease, border-color 0.12s ease;
         }
         .format-card-btn:hover {
           background-color: var(--color-secondary-container-hover);
         }
         .format-card-selected {
-          background-color: #FFFFFF;
+          background-color: var(--color-surface);
           border-color: var(--color-neutral-border-strong);
         }
         .format-card-top {
@@ -507,7 +509,7 @@ export const CommissionConfigurator: React.FC<CommissionConfiguratorProps> = ({
           align-items: baseline;
         }
         .format-name {
-          font-size: 14px;
+          font-size: 13px;
           font-weight: 700;
           color: var(--color-primary-ink);
         }
@@ -515,6 +517,11 @@ export const CommissionConfigurator: React.FC<CommissionConfiguratorProps> = ({
           font-size: 15px;
           font-weight: 700;
           color: var(--color-primary-accent);
+        }
+        .format-spec {
+          font-size: 10px;
+          color: var(--color-primary-accent);
+          font-weight: 600;
         }
         .format-desc {
           font-size: 11px;
@@ -564,7 +571,7 @@ export const CommissionConfigurator: React.FC<CommissionConfiguratorProps> = ({
           background-color: var(--color-secondary-container-hover);
         }
         .stepper-btn-selected {
-          background-color: #FFFFFF;
+          background-color: var(--color-surface);
           border-color: var(--color-neutral-border-strong);
         }
         .stepper-count {
@@ -603,7 +610,7 @@ export const CommissionConfigurator: React.FC<CommissionConfiguratorProps> = ({
           background-color: var(--color-secondary-container-hover);
         }
         .segment-card-selected {
-          background-color: #FFFFFF;
+          background-color: var(--color-surface);
           border-color: var(--color-neutral-border-strong);
         }
         .segment-card-top {
@@ -646,7 +653,7 @@ export const CommissionConfigurator: React.FC<CommissionConfiguratorProps> = ({
           background-color: var(--color-secondary-container-hover);
         }
         .usage-card-selected {
-          background-color: #FFFFFF;
+          background-color: var(--color-surface);
           border-color: var(--color-neutral-border-strong);
         }
         .usage-card-top {

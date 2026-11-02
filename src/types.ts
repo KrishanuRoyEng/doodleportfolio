@@ -1,24 +1,31 @@
 export type WorkCategory = 'All works' | 'Character' | 'Couple' | 'Pet' | 'Sticker sheet';
 
-export type CommissionFormat = 'Chibi Icon' | 'Full Doodle' | 'Scene Illustration';
+export type CommissionFormat = 
+  | 'Mini Art Card (A6)'
+  | 'Original Artwork (A5)'
+  | 'Framed Masterpiece (A4)';
 
-export type BackgroundType = 'Flat Color' | 'Simple Props' | 'Detailed Room';
+export type BackgroundType = 
+  | 'Clean Paper Wash'
+  | 'Floral & Hand Botanicals'
+  | 'Detailed Gouache Room';
 
-export type UsageType = 'Personal' | 'Commercial';
+export type UsageType = 'Personal Keepsake' | 'Commercial & Publishing';
 
 export interface WorkItem {
   id: string;
   title: string;
   category: 'Character' | 'Couple' | 'Pet' | 'Sticker sheet';
-  format: CommissionFormat | 'Sticker Sheet';
+  format: CommissionFormat | 'Handmade Sticker Sheet';
   dimensions: string;
   medium: string;
+  paperType: string;
   completionYear: string;
   imageUrl: string;
   colorTokens: string[];
   description: string;
   turnaroundDays: number;
-  baseRateUsd: number;
+  baseRateInr: number;
 }
 
 export interface CommissionConfig {
@@ -26,20 +33,20 @@ export interface CommissionConfig {
   subjectCount: number;
   backgroundType: BackgroundType;
   usageRights: UsageType;
-  expressDelivery: boolean;
-  sourceFiles: boolean;
-  printableSheet: boolean;
+  teakWoodFrame: boolean;
+  giftWrappingNote: boolean;
+  expressTrackedCourier: boolean;
 }
 
 export interface PriceBreakdown {
-  basePrice: number;
-  extraSubjectsPrice: number;
-  backgroundPrice: number;
-  commercialFee: number;
-  expressFee: number;
-  sourceFilesFee: number;
-  printableSheetFee: number;
-  totalCost: number;
+  basePriceInr: number;
+  extraSubjectsPriceInr: number;
+  backgroundPriceInr: number;
+  commercialFeeInr: number;
+  teakWoodFrameFeeInr: number;
+  giftWrappingFeeInr: number;
+  expressCourierFeeInr: number;
+  totalCostInr: number;
   estimatedTurnaroundDays: number;
 }
 
@@ -48,6 +55,7 @@ export interface ReviewItem {
   clientName: string;
   clientHandle: string;
   commissionedFormat: string;
+  location: string;
   date: string;
   turnaroundTime: string;
   quote: string;
@@ -57,6 +65,8 @@ export interface ReviewItem {
 export interface RequestSubmissionData {
   clientName: string;
   email: string;
+  phoneWhatsapp: string;
+  shippingCity: string;
   referenceUrl: string;
   projectNotes: string;
   deadlineDate?: string;

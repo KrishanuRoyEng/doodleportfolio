@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import type { WorkItem, CommissionConfig, CommissionFormat } from './types';
 import { portfolioWorks } from './data/works';
 import { calculateCommissionPrice } from './utils/pricing';
@@ -16,14 +16,31 @@ export const App: React.FC = () => {
   const [selectedWork, setSelectedWork] = useState<WorkItem | null>(null);
   const [noticeMessage, setNoticeMessage] = useState<string | null>(null);
 
+  // Dark Mode Theme State
+  const [darkMode, setDarkMode] = useState<boolean>(() => {
+    const saved = localStorage.getItem('akansha-theme');
+    if (saved) return saved === 'dark';
+    return false;
+  });
+
+  useEffect(() => {
+    const theme = darkMode ? 'dark' : 'light';
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('akansha-theme', theme);
+  }, [darkMode]);
+
+  const toggleTheme = () => {
+    setDarkMode((prev) => !prev);
+  };
+
   const [commissionConfig, setCommissionConfig] = useState<CommissionConfig>({
-    format: 'Full Doodle',
+    format: 'Original Artwork (A5)',
     subjectCount: 1,
-    backgroundType: 'Flat Color',
-    usageRights: 'Personal',
-    expressDelivery: false,
-    sourceFiles: false,
-    printableSheet: false
+    backgroundType: 'Clean Paper Wash',
+    usageRights: 'Personal Keepsake',
+    teakWoodFrame: false,
+    giftWrappingNote: false,
+    expressTrackedCourier: false
   });
 
   const priceBreakdown = useMemo(() => {
@@ -63,6 +80,8 @@ export const App: React.FC = () => {
   return (
     <div className="app-shell">
       <TopBar 
+        darkMode={darkMode}
+        onToggleTheme={toggleTheme}
         onNavigateTo={handleNavigateTo} 
         onShowNotice={handleShowNotice} 
       />

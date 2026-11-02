@@ -6,6 +6,7 @@ import {
   Layers01Icon 
 } from 'hugeicons-react';
 import type { WorkCategory, WorkItem } from '../types';
+import { formatInr } from '../utils/pricing';
 
 interface WorksGridProps {
   works: WorkItem[];
@@ -36,7 +37,7 @@ export const WorksGrid: React.FC<WorksGridProps> = ({ works, onSelectWork }) => 
             <span className="section-label">Selected Portfolio</span>
             <h2 className="section-title">Works</h2>
             <p className="section-desc">
-              Browse commissioned character doodles, couple keepsakes, pet studies, and sticker sheets.
+              Browse commissioned character doodles, couple keepsakes, pet studies, and illustrated sticker sheets on archival paper.
             </p>
           </div>
 
@@ -108,7 +109,7 @@ export const WorksGrid: React.FC<WorksGridProps> = ({ works, onSelectWork }) => 
                     <Layers01Icon size={12} />
                     {work.dimensions}
                   </span>
-                  <span className="spec-rate font-mono">From ${work.baseRateUsd}</span>
+                  <span className="spec-rate font-mono">From {formatInr(work.baseRateInr)}</span>
                 </div>
 
                 <div className="work-card-footer">
@@ -226,7 +227,6 @@ export const WorksGrid: React.FC<WorksGridProps> = ({ works, onSelectWork }) => 
         }
         .work-card:hover {
           border-color: var(--color-neutral-border-strong);
-          background-color: #FCFAFF;
         }
         .work-card-media {
           position: relative;

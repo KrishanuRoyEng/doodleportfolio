@@ -10,6 +10,7 @@ import type {
   PriceBreakdown, 
   RequestSubmissionData 
 } from '../types';
+import { formatInr } from '../utils/pricing';
 
 interface RequestFormProps {
   config: CommissionConfig;
@@ -26,6 +27,8 @@ export const RequestForm: React.FC<RequestFormProps> = ({
 }) => {
   const [clientName, setClientName] = useState('');
   const [email, setEmail] = useState('');
+  const [phoneWhatsapp, setPhoneWhatsapp] = useState('');
+  const [shippingCity, setShippingCity] = useState('');
   const [referenceUrl, setReferenceUrl] = useState('');
   const [projectNotes, setProjectNotes] = useState('');
   const [deadlineDate, setDeadlineDate] = useState('');
@@ -41,8 +44,14 @@ export const RequestForm: React.FC<RequestFormProps> = ({
     if (!email.trim() || !email.includes('@')) {
       errs.email = 'Enter a valid email address.';
     }
+    if (!phoneWhatsapp.trim() || phoneWhatsapp.length < 8) {
+      errs.phoneWhatsapp = 'Enter a valid WhatsApp phone number for courier updates.';
+    }
+    if (!shippingCity.trim()) {
+      errs.shippingCity = 'Enter your shipping city and state.';
+    }
     if (!referenceUrl.trim() || !referenceUrl.startsWith('http')) {
-      errs.referenceUrl = 'Enter a valid reference URL starting with http:// or https://.';
+      errs.referenceUrl = 'Enter a valid photo reference URL starting with http:// or https://.';
     }
     setErrors(errs);
     return Object.keys(errs).length === 0;
@@ -57,6 +66,8 @@ export const RequestForm: React.FC<RequestFormProps> = ({
     const newSubmission: RequestSubmissionData = {
       clientName: clientName.trim(),
       email: email.trim(),
+      phoneWhatsapp: phoneWhatsapp.trim(),
+      shippingCity: shippingCity.trim(),
       referenceUrl: referenceUrl.trim(),
       projectNotes: projectNotes.trim(),
       deadlineDate: deadlineDate || undefined,
@@ -67,20 +78,25 @@ export const RequestForm: React.FC<RequestFormProps> = ({
     };
 
     setSubmittedData(newSubmission);
-    onShowNotice(`Request submitted. Assigned ${referenceId}.`);
+    onShowNotice(`Physical art request submitted. Assigned ${referenceId}.`);
   };
 
   const handleCopySummary = async () => {
     if (!submittedData) return;
-    const summaryText = `Akansha and Doodles Commission Request
+    const summaryText = `Akansha and Doodles — Physical Art Commission Request
 Reference ID: ${submittedData.referenceId}
-Client: ${submittedData.clientName} (${submittedData.email})
+Client: ${submittedData.clientName}
+Email: ${submittedData.email}
+WhatsApp: ${submittedData.phoneWhatsapp}
+Shipping Destination: ${submittedData.shippingCity}
 Format: ${submittedData.config.format}
 Subjects: ${submittedData.config.subjectCount}
 Background: ${submittedData.config.backgroundType}
-Usage: ${submittedData.config.usageRights}
-Total Quote: $${submittedData.priceBreakdown.totalCost} USD
-Turnaround: ${submittedData.priceBreakdown.estimatedTurnaroundDays} business days
+Framing: ${submittedData.config.teakWoodFrame ? 'Teak Wood Glass Frame' : 'Unframed Mount'}
+Packaging: ${submittedData.config.giftWrappingNote ? 'Wax-Sealed Calligraphy Gift Wrapping' : 'Standard Rigid Board'}
+Courier: ${submittedData.config.expressTrackedCourier ? 'Express Air' : 'Standard Insured'}
+Total Quote: ${formatInr(submittedData.priceBreakdown.totalCostInr)} INR
+Dispatch Target: ${submittedData.priceBreakdown.estimatedTurnaroundDays} business days
 Reference URL: ${submittedData.referenceUrl}
 Notes: ${submittedData.projectNotes || 'None'}`;
 
@@ -97,6 +113,8 @@ Notes: ${submittedData.projectNotes || 'None'}`;
   const handleResetForm = () => {
     setClientName('');
     setEmail('');
+    setPhoneWhatsapp('');
+    setShippingCity('');
     setReferenceUrl('');
     setProjectNotes('');
     setDeadlineDate('');
@@ -109,23 +127,23 @@ Notes: ${submittedData.projectNotes || 'None'}`;
       <div className="container">
         <div className="section-head">
           <span className="section-label">Order Intake</span>
-          <h2 className="section-title">Submit Request</h2>
+          <h2 className="section-title">Submit Commission Request</h2>
           <p className="section-desc">
-            Provide client details and reference links. Akansha reviews all incoming requests within 24 hours.
+            Provide client details, shipping destination, and photo references. Akansha reviews all incoming physical commission orders within 24 hours.
           </p>
         </div>
 
         {submittedData ? (
-          /* Post-Submission State: Zero Fluff, state what happened & what to do next */
+          /* Post-Submission State */
           <div className="confirmation-card">
             <div className="confirmation-header">
               <div className="confirmation-badge font-mono">
                 <CheckmarkCircle01Icon size={18} />
                 <span>Reference ID {submittedData.referenceId}</span>
               </div>
-              <h3 className="confirmation-title">Request submitted.</h3>
+              <h3 className="confirmation-title">Commission request submitted.</h3>
               <p className="confirmation-lead">
-                Your commission configuration has been logged in Akansha's project queue.
+                Your physical original artwork configuration has been logged in Akansha's studio ledger.
               </p>
             </div>
 
@@ -135,7 +153,7 @@ Notes: ${submittedData.projectNotes || 'None'}`;
                 <div>
                   <div className="guidance-step-title">What happened:</div>
                   <div className="guidance-step-desc">
-                    Your request was recorded with Reference ID {submittedData.referenceId} for ${submittedData.priceBreakdown.totalCost} USD.
+                    Your request was assigned Reference ID {submittedData.referenceId} with a fixed physical quote of {formatInr(submittedData.priceBreakdown.totalCostInr)} INR.
                   </div>
                 </div>
               </div>
@@ -145,7 +163,7 @@ Notes: ${submittedData.projectNotes || 'None'}`;
                 <div>
                   <div className="guidance-step-title">What you should do next:</div>
                   <div className="guidance-step-desc">
-                    Check your inbox at <strong>{submittedData.email}</strong>. Akansha will inspect your reference links and send invoice {submittedData.referenceId} with a Stripe deposit link within 24 hours.
+                    Check your email at <strong>{submittedData.email}</strong> and WhatsApp at <strong>{submittedData.phoneWhatsapp}</strong>. Akansha will verify your reference photos and dispatch invoice {submittedData.referenceId} with UPI / Net Banking details within 24 hours.
                   </div>
                 </div>
               </div>
@@ -153,16 +171,16 @@ Notes: ${submittedData.projectNotes || 'None'}`;
               <div className="guidance-step">
                 <div className="guidance-step-num font-mono">3</div>
                 <div>
-                  <div className="guidance-step-title">Sketch proofing:</div>
+                  <div className="guidance-step-title">Hand-drawing &amp; Courier dispatch:</div>
                   <div className="guidance-step-desc">
-                    Drawing begins upon receipt of the 50% deposit. You will receive initial line art drafts for approval before final flat color application.
+                    Pencil sketches will be shared on WhatsApp for approval. Once confirmed, ink and gouache are applied, packed in rigid protective backing, and dispatched to {submittedData.shippingCity}.
                   </div>
                 </div>
               </div>
             </div>
 
             <div className="submitted-summary-table">
-              <div className="summary-table-head font-mono">Submitted Configuration Summary</div>
+              <div className="summary-table-head font-mono">Logged Physical Commission Details</div>
               
               <div className="table-row">
                 <span className="row-k">Client Name</span>
@@ -173,7 +191,15 @@ Notes: ${submittedData.projectNotes || 'None'}`;
                 <span className="row-v font-mono">{submittedData.email}</span>
               </div>
               <div className="table-row">
-                <span className="row-k">Format Tier</span>
+                <span className="row-k">WhatsApp Contact</span>
+                <span className="row-v font-mono">{submittedData.phoneWhatsapp}</span>
+              </div>
+              <div className="table-row">
+                <span className="row-k">Delivery Destination</span>
+                <span className="row-v">{submittedData.shippingCity}</span>
+              </div>
+              <div className="table-row">
+                <span className="row-k">Physical Sheet Size</span>
                 <span className="row-v">{submittedData.config.format}</span>
               </div>
               <div className="table-row">
@@ -181,15 +207,15 @@ Notes: ${submittedData.projectNotes || 'None'}`;
                 <span className="row-v">{submittedData.config.subjectCount}</span>
               </div>
               <div className="table-row">
-                <span className="row-k">Background</span>
+                <span className="row-k">Background Medium</span>
                 <span className="row-v">{submittedData.config.backgroundType}</span>
               </div>
               <div className="table-row">
-                <span className="row-k">Usage License</span>
-                <span className="row-v">{submittedData.config.usageRights}</span>
+                <span className="row-k">Teak Wood Frame</span>
+                <span className="row-v">{submittedData.config.teakWoodFrame ? 'Yes (Glass Mounted)' : 'No (Archival Board)'}</span>
               </div>
               <div className="table-row">
-                <span className="row-k">Reference Link</span>
+                <span className="row-k">Photo Reference Link</span>
                 <span className="row-v font-mono reference-url-truncate">
                   <a href={submittedData.referenceUrl} target="_blank" rel="noopener noreferrer">
                     {submittedData.referenceUrl}
@@ -198,14 +224,14 @@ Notes: ${submittedData.projectNotes || 'None'}`;
               </div>
               {submittedData.projectNotes && (
                 <div className="table-row">
-                  <span className="row-k">Project Notes</span>
+                  <span className="row-k">Studio Notes</span>
                   <span className="row-v">{submittedData.projectNotes}</span>
                 </div>
               )}
               <div className="table-row table-row-total">
-                <span className="row-k">Total Fixed Quote</span>
+                <span className="row-k">Total Physical Commission Quote</span>
                 <span className="row-v font-mono total-cost-val">
-                  ${submittedData.priceBreakdown.totalCost} USD ({submittedData.priceBreakdown.estimatedTurnaroundDays} business days)
+                  {formatInr(submittedData.priceBreakdown.totalCostInr)} INR ({submittedData.priceBreakdown.estimatedTurnaroundDays} business days to dispatch)
                 </span>
               </div>
             </div>
@@ -237,12 +263,12 @@ Notes: ${submittedData.projectNotes || 'None'}`;
               <div className="banner-left">
                 <span className="banner-badge font-mono">Active Configuration</span>
                 <div className="banner-specs">
-                  <strong>{config.format}</strong> · {config.subjectCount} {config.subjectCount === 1 ? 'subject' : 'subjects'} · {config.backgroundType} · {config.usageRights}
+                  <strong>{config.format}</strong> · {config.subjectCount} {config.subjectCount === 1 ? 'subject' : 'subjects'} · {config.backgroundType} · {config.teakWoodFrame ? 'Framed' : 'Unframed'}
                 </div>
               </div>
 
               <div className="banner-right">
-                <div className="banner-price font-mono">${priceBreakdown.totalCost} USD</div>
+                <div className="banner-price font-mono">{formatInr(priceBreakdown.totalCostInr)} INR</div>
                 <button 
                   type="button" 
                   className="btn btn-white btn-sm"
@@ -292,10 +318,48 @@ Notes: ${submittedData.projectNotes || 'None'}`;
                 </div>
               </div>
 
+              <div className="form-grid">
+                <div className="form-group">
+                  <label htmlFor="phone-whatsapp" className="form-label">
+                    <span>WhatsApp / Phone Number</span>
+                    <span className="form-label-hint">Required for pencil draft previews</span>
+                  </label>
+                  <input
+                    id="phone-whatsapp"
+                    type="tel"
+                    className="form-input"
+                    placeholder="+91 98765 43210"
+                    value={phoneWhatsapp}
+                    onChange={(e) => setPhoneWhatsapp(e.target.value)}
+                  />
+                  {errors.phoneWhatsapp && (
+                    <span className="form-error font-mono">{errors.phoneWhatsapp}</span>
+                  )}
+                </div>
+
+                <div className="form-group">
+                  <label htmlFor="shipping-city" className="form-label">
+                    <span>Delivery City &amp; State</span>
+                    <span className="form-label-hint">Required for courier transit</span>
+                  </label>
+                  <input
+                    id="shipping-city"
+                    type="text"
+                    className="form-input"
+                    placeholder="e.g. Indiranagar, Bengaluru, KA"
+                    value={shippingCity}
+                    onChange={(e) => setShippingCity(e.target.value)}
+                  />
+                  {errors.shippingCity && (
+                    <span className="form-error font-mono">{errors.shippingCity}</span>
+                  )}
+                </div>
+              </div>
+
               <div className="form-group">
                 <label htmlFor="reference-url" className="form-label">
-                  <span>Reference Images URL</span>
-                  <span className="form-label-hint">Required (Google Drive, Pinterest, Dropbox, or Imgur link)</span>
+                  <span>Photo Reference URL</span>
+                  <span className="form-label-hint">Required (Google Drive, Pinterest, Dropbox, or Instagram link)</span>
                 </label>
                 <input
                   id="reference-url"
@@ -312,13 +376,13 @@ Notes: ${submittedData.projectNotes || 'None'}`;
 
               <div className="form-group">
                 <label htmlFor="project-notes" className="form-label">
-                  <span>Project Notes</span>
-                  <span className="form-label-hint">Clothing colors, expressions, pet markings, or special requests</span>
+                  <span>Project &amp; Color Details</span>
+                  <span className="form-label-hint">Preferred clothing colors, eye color, hairstyle, or custom text</span>
                 </label>
                 <textarea
                   id="project-notes"
                   className="form-textarea"
-                  placeholder="Specify character pose, favorite outfit colors, hairstyle details, or text inscriptions."
+                  placeholder="Specify person/pet details, preferred gouache tint colors, or any calligraphy text to write on the artwork."
                   value={projectNotes}
                   onChange={(e) => setProjectNotes(e.target.value)}
                 />
@@ -326,8 +390,8 @@ Notes: ${submittedData.projectNotes || 'None'}`;
 
               <div className="form-group">
                 <label htmlFor="deadline-date" className="form-label">
-                  <span>Specific Target Date</span>
-                  <span className="form-label-hint">Optional (Birthday, anniversary, or event deadline)</span>
+                  <span>Target Delivery Date</span>
+                  <span className="form-label-hint">Optional (Birthday, anniversary, or event gift date)</span>
                 </label>
                 <input
                   id="deadline-date"
@@ -340,10 +404,10 @@ Notes: ${submittedData.projectNotes || 'None'}`;
 
               <div className="form-submit-row">
                 <div className="submit-disclaimer">
-                  No immediate payment taken. An official invoice with 50% deposit link will be dispatched to your email after Akansha verifies your references.
+                  No immediate payment taken. An official invoice with UPI / Net Banking deposit details will be sent to your email and WhatsApp after Akansha reviews your photos.
                 </div>
                 <button type="submit" className="btn btn-primary btn-lg">
-                  <span>Submit request</span>
+                  <span>Submit commission request</span>
                   <ArrowRight01Icon size={16} />
                 </button>
               </div>
@@ -533,7 +597,7 @@ Notes: ${submittedData.projectNotes || 'None'}`;
           border-bottom: none;
         }
         .table-row-total {
-          background-color: #FAF8FF;
+          background-color: var(--color-secondary-container);
           font-weight: 700;
         }
         .row-k {

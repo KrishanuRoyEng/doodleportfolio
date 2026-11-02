@@ -1,3 +1,4 @@
+import React from 'react';
 import { 
   InstagramIcon, 
   Mail01Icon 
@@ -36,7 +37,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigateTo, onShowNotice }) =>
             </div>
           </div>
           <p className="footer-bio">
-            Independent illustrator creating clean line doodles, personalized portraits, and cute sticker sheets.
+            Independent traditional doodle artist and illustrator creating hand-painted originals on 300 GSM archival cotton rag paper.
           </p>
           <div className="footer-social-links">
             <a 
@@ -46,7 +47,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigateTo, onShowNotice }) =>
               className="btn btn-secondary btn-sm"
             >
               <InstagramIcon size={14} />
-              <span>Instagram profile</span>
+              <span>Instagram studio</span>
             </a>
             <button
               type="button"
@@ -94,12 +95,12 @@ export const Footer: React.FC<FooterProps> = ({ onNavigateTo, onShowNotice }) =>
         </div>
 
         <div className="footer-specs-col">
-          <div className="footer-nav-title font-mono">Standards</div>
+          <div className="footer-nav-title font-mono">Studio Standards</div>
           <ul className="standards-list">
-            <li>Zero AI generation: 100% human drawn digital line art.</li>
-            <li>300 DPI high-resolution output delivered in PNG, PDF, or PSD.</li>
-            <li>Two iterative sketch revision rounds included on all tiers.</li>
-            <li>50% deposit required prior to project start.</li>
+            <li>100% hand-painted physical originals. Zero digital print reproduction.</li>
+            <li>Archival 300 GSM cotton rag paper with waterproof lightfast pigment inks.</li>
+            <li>Two pencil draft revision rounds provided prior to inking.</li>
+            <li>Insured protective packaging dispatched across India.</li>
           </ul>
         </div>
       </div>
@@ -110,7 +111,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigateTo, onShowNotice }) =>
             (c) 2026 Akansha and Doodles. All artwork rights reserved.
           </div>
           <div className="footer-palette font-mono">
-            Canvas #FAF8FF · Container #F2EEFC · Accent #6E44FF · Ink #181523
+            Handcrafted with solid pigments · Traditional ink &amp; gouache
           </div>
         </div>
       </div>

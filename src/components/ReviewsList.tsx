@@ -20,7 +20,7 @@ export const ReviewsList: React.FC<ReviewsListProps> = ({ onNavigateToConfig }) 
             <span className="section-label">Client Feedback</span>
             <h2 className="section-title">Reviews</h2>
             <p className="section-desc">
-              Direct statements from clients with verified commissioned orders.
+              Direct statements from clients with verified delivered physical originals.
             </p>
           </div>
 
@@ -52,7 +52,11 @@ export const ReviewsList: React.FC<ReviewsListProps> = ({ onNavigateToConfig }) 
                         </span>
                       )}
                     </div>
-                    <div className="client-handle font-mono">{rev.clientHandle}</div>
+                    <div className="client-meta-line font-mono">
+                      <span>{rev.clientHandle}</span>
+                      <span>·</span>
+                      <span>{rev.location}</span>
+                    </div>
                   </div>
                 </div>
 
@@ -154,9 +158,12 @@ export const ReviewsList: React.FC<ReviewsListProps> = ({ onNavigateToConfig }) 
           border-radius: var(--radius-full);
           padding: 2px 6px;
         }
-        .client-handle {
+        .client-meta-line {
           font-size: 11px;
           color: var(--color-muted-ink);
+          display: flex;
+          gap: 6px;
+          margin-top: 2px;
         }
         .review-date-group {
           text-align: right;
